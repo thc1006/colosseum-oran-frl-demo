@@ -1,0 +1,8 @@
+site_name: colosseum-oran-frl-demo
+# 
+site_author: Hsiu-Chi Tsai
+# 
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+theme: material

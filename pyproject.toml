@@ -1,0 +1,36 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "colosseum_oran_frl_demo"
+version = "0.0.1"
+dependencies = ["pandas", "pyarrow", "torch", "gymnasium", "tqdm"]
+description = "Offline Federated RL for O-RAN slice resource management on Colosseum traces"
+authors = [
+  { name = "Hsiu-Chi Tsai" },
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License"
+]
+requires-python = "~=3.10.0"
+
+[project.scripts]
+make-dataset = "colosseum_oran_frl_demo.data.dataset:cli"
+frl-train    = "script.train:main"
+
+[tool.ruff]
+line-length = 99
+src = ["colosseum_oran_frl_demo"]
+include = ["pyproject.toml", "colosseum_oran_frl_demo/**/*.py"]
+
+[tool.ruff.lint]
+extend-select = ["I"]  # Add import sorting
+
+[tool.ruff.lint.isort]
+known-first-party = ["colosseum_oran_frl_demo"]
+force-sort-within-sections = true
+
