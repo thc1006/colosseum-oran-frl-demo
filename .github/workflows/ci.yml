@@ -1,0 +1,51 @@
+# .github/workflows/ci.yml
+name: CI
+
+# 1. 在 main 分支推送與 PR 時觸發
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    # 2. 使用最新 Ubuntu runner
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.11, 3.10]  # 多版本測試 :contentReference[oaicite:0]{index=0}
+
+    steps:
+      # 3. Checkout 並取回 LFS 檔案
+      - name: Checkout repository
+        uses: actions/checkout@v4   # v4 is recommended :contentReference[oaicite:1]{index=1}
+        with:
+          lfs: true                 # 啟用 Git LFS :contentReference[oaicite:2]{index=2}
+          fetch-depth: 0            # 確保完整歷史，用於 LFS 檔案回溯 :contentReference[oaicite:3]{index=3}
+
+      # 4. 設定 Python 並快取 pip 
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}  # 明確指定版本 :contentReference[oaicite:4]{index=4}
+          cache: "pip"                                  # 自動快取 pip 套件 :contentReference[oaicite:5]{index=5}
+
+      # 5. 安裝相依（含 -e editable）  
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel  # 推薦先升級 pip suite :contentReference[oaicite:6]{index=6}
+          pip install -r requirements.txt -r requirements-dev.txt
+          pip install -e .  # 本地安裝成 editable 模式 :contentReference[oaicite:7]{index=7}
+
+      # 6. 程式碼檢查與格式
+      - name: Lint with ruff
+        run: ruff src scripts tests            # 使用 ruff 做靜態檢查 :contentReference[oaicite:8]{index=8}
+
+      - name: Format check with black
+        run: black --check src scripts tests    # black 格式檢查 :contentReference[oaicite:9]{index=9}
+
+      # 7. 執行測試
+      - name: Run tests with pytest
+        run: pytest --maxfail=1 --disable-warnings -q  # pytest 標準 CI flags :contentReference[oaicite:10]{index=10}
