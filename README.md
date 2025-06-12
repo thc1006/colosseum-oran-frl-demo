@@ -76,7 +76,7 @@ colosseum-oran-frl-demo/
 ### Murmur: Why I Chose Google Colab
 In this project, I manually downloaded the [**Original Dataset**](https://github.com/wineslab/colosseum-oran-coloran-dataset) (ZIP archive) to my local machine and then uploaded it to my personal Google Drive, because Google Colab imposes daily bandwidth limits on `git clone` operations that make a one-time download of such a large dataset impractical. By mounting my Drive within Colab, I ensured both data integrity and ease of access, and have confirmed that the workflow runs successfully on both my local environment and in the Colab notebook. Moreover, since my laptop’s only got GTX 1050 Laptop version GPU could not deliver sufficient performance (resulting in unacceptably slow processing). That’s why I used Colab’s free T4 GPU, which provides better computational power for the demands of this project.
 
-If you want to execute Notebooks on Google Colab like I do:
+### If you want to execute Notebooks on Google Colab like I do:
 1. Download the colosseum-oran-coloran-dataset(ZIP archive). Unzip it and upload to ur Google Drive.
 2. Run [**01_Data_Preparation.ipynb**](https://colab.research.google.com/drive/1OIAcJt7oQWsaMwzed1p0HV2Olrcg5Y14) for Clean and Format Dataset (Remember change Dataset path to ur own !!!).
 3. Run [**02_FRL_Training.ipynb**](https://colab.research.google.com/drive/1z8N3Ex1l2outgCnk6yXumGuJERHP8Lqv) for Federated Reinforcement Learning Sitmulation.
@@ -86,6 +86,9 @@ If you want to execute Notebooks on Google Colab like I do:
 
 
 ## 🚀 Quick Start
+
+> Warning!!! This section is workin in progress... Might not stable.
+> There is a [**Google Colab version of the previous block**](https://github.com/thc1006/colosseum-oran-frl-demo/edit/main/README.md#if-you-want-to-execute-notebooks-on-google-colab-like-i-do), so you can work through that first.
 
 ### 0. Install
 ```bash
