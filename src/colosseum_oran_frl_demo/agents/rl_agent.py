@@ -93,9 +93,9 @@ class RLAgent:
         next_t = torch.as_tensor(next_states, dtype=torch.float32, device=self.device)
         rewards_t = torch.as_tensor(rewards, dtype=torch.float32, device=self.device)
         dones_t = torch.as_tensor(dones, dtype=torch.float32, device=self.device)
-        actions_t = torch.as_tensor(actions, dtype=torch.int64, device=self.device).view(
-            -1, 1
-        )
+        actions_t = torch.as_tensor(
+            actions, dtype=torch.int64, device=self.device
+        ).view(-1, 1)
 
         # Predicted Q(s,a)
         q_pred = self.model(states_t).gather(1, actions_t).squeeze()
@@ -103,7 +103,7 @@ class RLAgent:
         # Target: r + γ * max_a' Q(s',a') * (1-done)
         with torch.no_grad():
             max_next_q = torch.max(self.model(next_t), dim=1)[0]
-            q_target = rewards_t + self.gamma * max_next_q * (1-dones_t)
+            q_target = rewards_t + self.gamma * max_next_q * (1 - dones_t)
 
         loss = self.loss_fn(q_pred, q_target.detach())
         self.optimizer.zero_grad()

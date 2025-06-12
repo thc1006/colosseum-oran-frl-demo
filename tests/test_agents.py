@@ -3,6 +3,7 @@ import numpy as np
 from colosseum_oran_frl_demo.agents.rl_agent import RLAgent
 from colosseum_oran_frl_demo.agents.fed_server import fedavg
 
+
 def test_agent_and_fedavg():
     a1 = RLAgent(4, 3)
     a2 = RLAgent(4, 3)
