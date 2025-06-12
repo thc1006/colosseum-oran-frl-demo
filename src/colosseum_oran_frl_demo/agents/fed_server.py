@@ -1,16 +1,28 @@
-# ─── src/colosseum_oran_frl_demo/agents/fed_server.py ───
+# 檔案：src/colosseum_oran_frl_demo/agents/fed_server.py
 """
 簡易 FedAvg – 使用 torch.stack 保留 dtype，避免隱式變成 float64。
 """
 from __future__ import annotations
 import torch, copy
-from typing import List
-from colosseum_oran_frl_demo.agents.rl_agent import RLAgent
+from typing import List, Dict
 
 @torch.no_grad()
-def fedavg(clients: List[RLAgent]) -> None:
-    ks = clients[0].model.state_dict().keys()
-    avg_state = {k: torch.mean(torch.stack([c.model.state_dict()[k] for c in clients]), dim=0)
-                 for k in ks}
-    for c in clients:
-        c.model.load_state_dict(avg_state)
+def fedavg(client_model_states: List[Dict[str, torch.Tensor]]) -> Dict[str, torch.Tensor]:
+    """
+    接收一個模型狀態字典的列表，回傳一個平均後的狀態字典。
+    """
+    if not client_model_states:
+        return {}
+    
+    # 取得第一個客戶端的模型鍵
+    keys = client_model_states[0].keys()
+    
+    # 計算每個參數的平均值
+    avg_state = {
+        k: torch.mean(
+            torch.stack([s[k].float() for s in client_model_states]), dim=0
+        )
+        for k in keys
+    }
+    
+    return avg_state
