@@ -74,7 +74,13 @@ colosseum-oran-frl-demo/
 ````
 
 ### Murmur: Why I Chose Google Colab
-In this project, I manually downloaded the [original dataset](https://github.com/wineslab/colosseum-oran-coloran-dataset) (ZIP archive) to my local machine and then uploaded it to my personal Google Drive, because Google Colab imposes daily bandwidth limits on `git clone` operations that make a one-time download of such a large dataset impractical. By mounting my Drive within Colab, I ensured both data integrity and ease of access, and have confirmed that the workflow runs successfully on both my local environment and in the Colab notebook. Moreover, since my laptop’s only got GTX 1050 Laptop version GPU could not deliver sufficient performance (resulting in unacceptably slow processing). That’s why I used Colab’s free T4 GPU, which provides better computational power for the demands of this project.
+In this project, I manually downloaded the [**Original Dataset**](https://github.com/wineslab/colosseum-oran-coloran-dataset) (ZIP archive) to my local machine and then uploaded it to my personal Google Drive, because Google Colab imposes daily bandwidth limits on `git clone` operations that make a one-time download of such a large dataset impractical. By mounting my Drive within Colab, I ensured both data integrity and ease of access, and have confirmed that the workflow runs successfully on both my local environment and in the Colab notebook. Moreover, since my laptop’s only got GTX 1050 Laptop version GPU could not deliver sufficient performance (resulting in unacceptably slow processing). That’s why I used Colab’s free T4 GPU, which provides better computational power for the demands of this project.
+If you want to execute Notebooks on Google Colab like I do:
+1. Download the colosseum-oran-coloran-dataset(ZIP archive). Then unzip the folder and upload it to your Google Drive.
+2. Run this [**01_Data_Preparation.ipynb**](https://colab.research.google.com/drive/1CxeZmp5E28P34wEbEgCa3Q9vNCe4Tae3) for Clean and Format the data (Remember change the dataset path to ur own !!!)
+3. Run this [**02_FRL_Training.ipynb**](https://colab.research.google.com/drive/1z8N3Ex1l2outgCnk6yXumGuJERHP8Lqv) for Federated Reinforcement Learning sitmulation
+
+> Remember to **Save a Copy to ur own Drive** before you start executing Cells!
 
 
 
@@ -94,7 +100,6 @@ pip install -e .
 First, download or locate the `colosseum-oran-coloran-dataset` raw CSV files. Then, run the script pointing to the raw data directory and your desired output location.
 
 ```bash
-# 修正：指令範例與預設路徑對齊，更具指導性
 python scripts/make_dataset.py \
   --raw   /path/to/your/colosseum-oran-coloran-dataset/rome_static_medium \
   --out   src/colosseum_oran_frl_demo/data/processed
@@ -105,7 +110,6 @@ python scripts/make_dataset.py \
 This script will automatically use the processed data from the default path specified in `src/colosseum_oran_frl_demo/config.py`.
 
 ```bash
-# 修正：簡化指令，因為腳本已有預設路徑
 python scripts/train.py --rounds 10 --clients 1,2,6 --out outputs
 ```
 
