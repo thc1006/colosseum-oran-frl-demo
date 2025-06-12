@@ -73,6 +73,11 @@ colosseum-oran-frl-demo/
 
 ````
 
+### Murmur: Why I Chose Google Colab
+In this project, I manually downloaded the original dataset (ZIP archive) to my local machine and then uploaded it to my personal Google Drive, because Google Colab imposes daily bandwidth limits on `git clone` operations that make a one-time download of such a large dataset impractical. By mounting my Drive within Colab, I ensured both data integrity and ease of access, and have confirmed that the workflow runs successfully on both my local environment and in the Colab notebook. Moreover, since my laptop’s only got GTX 1050 Laptop version GPU could not deliver sufficient performance (resulting in unacceptably slow processing). That’s why I used Colab’s free T4 GPU, which provides better computational power for the demands of this project.
+
+
+
 ## 🚀 Quick Start
 
 ### 0. Install
