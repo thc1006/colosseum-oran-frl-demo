@@ -1,4 +1,4 @@
-# ─── src/coloran_frl/data/validate.py ───
+# 檔案：src/colosseum_oran_frl_demo/data/validate.py
 """
 Light-weight integrity checks for KPI parquet files.
 """
