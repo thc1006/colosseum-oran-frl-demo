@@ -1,10 +1,11 @@
+# ─── .github/workflows/ci.yml ───
 name: CI
 
 on:
   push:
-    branches: [main]      # run on main commits
+    branches: [ main ]
   pull_request:
-    branches: [main]      # and on PRs targeting main
+    branches: [ main ]
 
 jobs:
   test:
@@ -12,40 +13,35 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.11, 3.10]   # ✅ valid versions only
+        python-version: ["3.11", "3.10"]
 
     steps:
-    # 1. checkout code + LFS files
-    - uses: actions/checkout@v4
-      with:
-        lfs: true
-        fetch-depth: 0                 # full history helps LFS
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
 
-    # 2. set up Python + pip cache
-    - uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-        cache: "pip"
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
 
-    # 3. install deps
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt -r requirements-dev.txt
-        pip install -e .
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
 
-    # 4. lint & format check
-    - name: Ruff lint
-      run: ruff src scripts tests
+      - name: Lint with ruff
+        run: ruff src scripts tests
 
-    - name: Black format check
-      run: black --check src scripts tests
+      - name: Format check with black
+        run: black --check src scripts tests
 
-    # 5. run unit tests + nbmake
-    - name: Pytest
-      run: pytest -q
+      - name: Run tests with pytest
+        run: pytest --maxfail=1 --disable-warnings -q
 
-    # 6. run nbmake on tutorial notebooks (optional; comment out if unnecessary)
-    - name: nbmake (notebooks)
-      run: |
-        pytest --nbmake notebooks/*.ipynb -q
+      - name: Test notebooks with nbmake
+        run: pytest --nbmake notebooks
