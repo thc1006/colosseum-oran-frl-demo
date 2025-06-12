@@ -14,6 +14,9 @@
   <a href="https://github.com/thc1006/colosseum-oran-frl-demo/blob/main/LICENSE"><img
     src="https://img.shields.io/badge/License-MIT-green"
     alt="license"/></a>
+  <a href="https://github.com/thc1006/colosseum-oran-frl-demo/actions/workflows/ci.yml">
+    <img src="https://github.com/thc1006/colosseum-oran-frl-demo/actions/workflows/ci.yml/badge.svg"
+      alt="CI Status"/></a>
   <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" /></a>
   <img src="https://img.shields.io/badge/python-3.9%20|%203.10%20|%203.11-blue"/>
