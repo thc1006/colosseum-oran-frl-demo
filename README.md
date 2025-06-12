@@ -134,7 +134,7 @@ For a step-by-step guide, open the notebooks:
 3. Large models / data  ➜ push via Git LFS.
 
 Guidelines are adapted from the
-[Awsome-Readme collection]([github.com][1]).
+[Awsome-Readme collection](https://github.com/matiassingers/awesome-readme).
 
 ## 📜 License
 
@@ -181,8 +181,3 @@ Furthermore, to properly credit the [original dataset](https://github.com/winesl
 * **Twitter/X** · [@thc1006](https://x.com/@thc1006)
 
 Happy slicing & federating! ! 🍰 ;)
-
-[1]: https://github.com/matiassingers/awesome-readme "matiassingers/awesome-readme - GitHub"
-[2]: https://github.com/AshwinRJ/Federated-Learning-PyTorch/blob/master/README.md "README.md - AshwinRJ/Federated-Learning-PyTorch - GitHub"
-[3]: https://daily.dev/blog/readme-badges-github-best-practices "Readme Badges GitHub: Best Practices - Daily.dev"
-[4]: https://github.com/wineslab/colosseum-oran-coloran-dataset "Colosseum O-RAN ColORAN Dataset - GitHub"
