@@ -1,4 +1,4 @@
-# 檔案：pyproject.toml
+# 檔案: pyproject.toml
 
 [build-system]
 requires = ["flit_core >=3.2,<4"]
@@ -7,7 +7,6 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "colosseum_oran_frl_demo"
 version = "0.0.1"
-# 修正：與 requirements.txt 完全同步，並移除不再需要的 gymnasium
 dependencies = [
     "pandas>=1.5",
     "numpy>=1.23",
@@ -27,13 +26,20 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License"
 ]
-# 修正：擴大 Python 版本支援，與 CI/CD 流程及 README 文件保持一致
 requires-python = ">=3.9, <3.12"
 
 [project.scripts]
-# 修正：確保這些腳本進入點在對應的 Python 檔案中有被定義
 make-dataset = "colosseum_oran_frl_demo.data.dataset:cli"
 frl-train    = "scripts.train:main"
+
+# 修正：新增此區塊來管理開發相依性
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "black",
+    "nbmake"
+]
 
 [tool.ruff]
 line-length = 99
