@@ -39,44 +39,34 @@
 ## 🗺️  Project Layout
 ```
 colosseum-oran-frl-demo/
-├── LICENSE                    <- OSS license
-├── README.md                  <- High-level overview & quick-start
-├── Makefile                   <- Common tasks: env / data / train / test
-├── requirements.txt           <- Runtime dependencies
-├── requirements-dev.txt       <- Dev / CI deps (pytest, ruff, nbmake …)
-├── pyproject.toml             <- Package + tool configuration
+├── LICENSE
+├── README.md
+├── pyproject.toml
+├── requirements.txt
 │
-├── .github/
-│   └── workflows/
-│       └── ci.yml             <- Lint + tests on push / PR
+├── .github/workflows/ci.yml
 │
-├── scripts/                   <- CLI entry points
+├── scripts/
 │   ├── make_dataset.py
 │   └── train.py
 │
-├── src/                       <- Installable Python package
+├── src/
 │   └── colosseum_oran_frl_demo/
-│       ├── __init__.py
-│       ├── config.py          <- Paths & hyper-params
-│       ├── data/              <- ETL helpers (code only)
-│       │   ├── dataset.py
-│       │   └── validate.py
-│       ├── envs/              <- KPI replay simulator
-│       │   └── slice_sim_env.py
-│       ├── agents/            <- DQN agent + FedAvg server
-│       │   ├── rl_agent.py
-│       │   └── fed_server.py
-│       └── utils/             <- Plotting, misc utilities
-│           └── plots.py
+│       ├── init.py
+│       ├── config.py
+│       ├── data/
+│       ├── envs/
+│       ├── agents/
+│       └── utils/
 │
-├── notebooks/                 <- Two lightweight tutorials (Binder ready)
+├── notebooks/
 │   ├── 01_data_preparation.ipynb
 │   └── 02_frl_training.ipynb
 │
-└── tests/                     <- pytest + nbmake suites
-    ├── test_dataset.py
-    ├── test_env.py
-    └── test_agents.py
+└── tests/
+├── test_dataset.py
+├── test_env.py
+└── test_agents.py
 
 ````
 
