@@ -1,0 +1,9 @@
+# ─── requirements-dev.txt ───
+pytest>=7.0           # for running unit tests  
+nbmake>=0.8           # to test Jupyter notebooks in CI  
+ruff>=0.0.280         # fast Python linter  
+black>=23.1.0         # code formatter  
+isort>=5.10           # import sorting  
+flake8>=6.0           # additional lint rules  
+mypy>=0.982           # optional static type checks  
+pre-commit>=3.3.0     # local pre-commit hooks  
