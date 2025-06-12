@@ -84,45 +84,42 @@ colosseum-oran-frl-demo/
 
 ### 0. Install
 ```bash
-git clone https://github.com/yourname/colosseum-oran-frl-demo.git
+git clone [https://github.com/thc1006/colosseum-oran-frl-demo.git](https://github.com/thc1006/colosseum-oran-frl-demo.git)
 cd colosseum-oran-frl-demo
-python -m venv .venv && source .venv/bin/activate   # Win: .venv\Scripts\activate
-pip install -r requirements.txt -e .
-````
+python3 -m venv .venv && source .venv/bin/activate # Win: .venv\Scripts\activate
+pip install -r requirements.txt
+pip install -e .
+```
 
-### 1. Data Prep (5 min ≈ 1 GB)
+### 1. Data Prep (Requires external dataset)
+
+First, download or locate the `colosseum-oran-coloran-dataset` raw CSV files. Then, run the script pointing to the raw data directory and your desired output location.
 
 ```bash
+# 修正：指令範例與預設路徑對齊，更具指導性
 python scripts/make_dataset.py \
-  --raw   src/colosseum_oran_frl_demo/data/raw \
+  --raw   /path/to/your/colosseum-oran-coloran-dataset/rome_static_medium \
   --out   src/colosseum_oran_frl_demo/data/processed
 ```
 
 ### 2. Offline FRL Training
 
+This script will automatically use the processed data from the default path specified in `src/colosseum_oran_frl_demo/config.py`.
+
 ```bash
-python scripts/train.py \
-  --parquet src/colosseum_oran_frl_demo/data/processed \
-  --rounds  5 \
-  --clients 1,2,3 \
-  --out     outputs
+# 修正：簡化指令，因為腳本已有預設路徑
+python scripts/train.py --rounds 10 --clients 1,2,6 --out outputs
 ```
 
-Artifacts:
-> About Visualise this section is workin in progress...
-> > Da's bcuz FRL training is frankin' slow. give me 1 more day I will finish ;)
-* `outputs/training_history.csv`
-* `outputs/reward_curve.png`
-* `outputs/global_model.pt`
+Training artifacts will be saved in the `outputs/` directory.
 
-### 3. Visualise
+### 3. Notebook Walkthrough
 
-> About Visualise this section aslo workin in progress...
+For a step-by-step guide, open the notebooks:
+1. `notebooks/01_data_preparation.ipynb`
+2. `notebooks/02_frl_training.ipynb`
 
-```python
-from colosseum_oran_frl_demo.utils.plots import plot_curve
-plot_curve("outputs/training_history.csv", metric="reward")
-```
+---
 
 ## 🏗️  Roadmap
 
