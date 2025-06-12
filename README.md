@@ -143,23 +143,26 @@ Distributed under the MIT License. See **[LICENSE](https://github.com/thc1006/co
 
 ## 🙏 Acknowledgements
 
-**Wireless Networks and Embedded Systems Lab (WiNES) Lab** at Northeastern University for releasing the dataset ([github.com][4]).
-README structure inspired by community best-practice articles on badges and documentation ([daily.dev][3]) and by high-impact FL projects ([github.com][2]).
+This project was made possible by the foundational work of the [**WiNES Lab at Northeastern University**](https://ece.northeastern.edu/wineslab/), who created and open-sourced the [**Colosseum O-RAN Dataset**](https://openrangym.com/datasets/colosseum-coloran-dataset).
 
-## Citation
+This large-scale, high-fidelity dataset of O-RAN KPI traces provided an invaluable foundation for this research, enabling meaningful offline reinforcement learning experiments that closely mirror real-world network scenarios. Without access to such high-quality, open data, this work would not have been feasible.
 
-If you use this repo in academic work, please cite:
+We extend our sincerest gratitude to the WiNES Lab for their significant contributions to the open-access wireless research community.
+
+## 📜 Citation
+
+If you use this repository in your academic work, please cite it as follows:
 
 ```bibtex
 @misc{colosseum_oran_frl_demo,
   author       = {Tsai, Hsiu-Chi and Contributors},
   title        = {{Colosseum-ORAN-FRL-Demo}: Offline Federated RL for O-RAN Slicing},
-  year         = 2025,
-  url          = {https://github.com/yourname/colosseum-oran-frl-demo},
+  year         = {2025},
+  url          = {[https://github.com/thc1006/colosseum-oran-frl-demo](https://github.com/thc1006/colosseum-oran-frl-demo)},
 }
 ```
 
-If you use [this dataset](https://github.com/wineslab/colosseum-oran-coloran-dataset)（wineslab's colosseum-oran-coloran-dataset）in academic work, please cite:
+Furthermore, to properly credit the [original dataset](https://github.com/wineslab/colosseum-oran-coloran-dataset), we strongly recommend citing the official Colosseum paper in your work as well:
 
 ```bibtex
 @article{polese2022coloran,
@@ -179,7 +182,7 @@ If you use [this dataset](https://github.com/wineslab/colosseum-oran-coloran-dat
 
 Happy slicing & federating! ! 🍰 ;)
 
-[1]: https://github.com/matiassingers/awesome-readme?utm_source=chatgpt.com "matiassingers/awesome-readme - GitHub"
+[1]: https://github.com/matiassingers/awesome-readme "matiassingers/awesome-readme - GitHub"
 [2]: https://github.com/AshwinRJ/Federated-Learning-PyTorch/blob/master/README.md "README.md - AshwinRJ/Federated-Learning-PyTorch - GitHub"
 [3]: https://daily.dev/blog/readme-badges-github-best-practices "Readme Badges GitHub: Best Practices - Daily.dev"
 [4]: https://github.com/wineslab/colosseum-oran-coloran-dataset "Colosseum O-RAN ColORAN Dataset - GitHub"
