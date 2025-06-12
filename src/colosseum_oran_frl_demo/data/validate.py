@@ -6,8 +6,8 @@ from __future__ import annotations
 from pathlib import Path
 import pandas as pd
 
-def integrity_check(parquet_path: str | Path,
-                    timestamp_col: str = "timestamp") -> None:
+
+def integrity_check(parquet_path: str | Path, timestamp_col: str = "timestamp") -> None:
     df = pd.read_parquet(parquet_path)
     if df.empty:
         raise ValueError("Dataset is empty")
