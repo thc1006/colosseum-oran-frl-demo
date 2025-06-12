@@ -14,45 +14,36 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ['3.9', '3.10', '3.11'] # 修正：與 pyproject.toml 同步
+        python-version: ['3.9', '3.10', '3.11']
 
     steps:
-    # 1. checkout code + LFS files
     - uses: actions/checkout@v4
       with:
         lfs: true
         fetch-depth: 0
 
-    # 2. set up Python + pip cache
-    - uses: actions/setup-python@v5
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         cache: "pip"
 
-    # 3. install deps
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        # 修正：移除 requirements-dev.txt 的安裝，因為 pytest, ruff 等已包含在 pyproject.toml 的 dev group 中
-        # 如果您有 requirements-dev.txt 檔案，請確保其內容與 pyproject.toml 的 dev group 一致
-        # pip install -r requirements-dev.txt 
-        pip install .
+        # 修正：使用此指令安裝專案本身、運行時相依性以及所有開發相依性
+        pip install .[dev]
 
-    # 4. lint & format check
-    - name: Ruff lint
+    - name: Lint with Ruff
       run: ruff check src scripts tests
 
-    - name: Black format check
+    - name: Check formatting with Black
       run: black --check src scripts tests
 
-    # 5. run unit tests
-    - name: Pytest unit tests
+    - name: Run unit tests with Pytest
       run: pytest -q tests/
 
-    # 6. 註解掉 nbmake
-    # 說明：由於 Notebooks 依賴大型外部數據集，不適合在標準 CI 流程中執行。
-    # 如果需要驗證 Notebooks，建議建立一個使用 self-hosted runner 並能存取數據的獨立 workflow。
+    # 說明：Notebook 測試已因數據依賴問題被安全地註解掉
     # - name: nbmake (notebooks)
     #   run: |
     #     pytest --nbmake notebooks/*.ipynb -q
