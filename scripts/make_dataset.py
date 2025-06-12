@@ -1,5 +1,6 @@
-# ─── scripts/make_dataset.py ───
-import argparse, coloran_frl.data.dataset as ds
+# 檔案：scripts/make_dataset.py
+import argparse
+import colosseum_oran_frl_demo.data.dataset as ds
 
 def cli():
     p = argparse.ArgumentParser()
