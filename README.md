@@ -19,7 +19,7 @@
       alt="CI Status"/></a>
   <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" /></a>
-  <img src="https://img.shields.io/badge/python-3.9%20|%203.10%20|%203.11-blue"/>
+  <img src="https://img.shields.io/badge/python-3.9%20|%203.10%20|%203.11|%203.12-blue"/>
   <img src="https://img.shields.io/badge/torch-2.x-red"/>
   <img src="https://img.shields.io/badge/PyTorch-1.10.0%2B-orange"/>
 </p>
