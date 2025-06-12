@@ -1,4 +1,4 @@
-# ─── src/coloran_frl/envs/slice_sim_env.py ───
+# 檔案：src/colosseum_oran_frl_demo/envs/slice_sim_env.py
 """
 A lightweight, Gym-style environment that re-plays KPI traces.
 The original Notebook class `SliceSimEnv` is copied verbatim
