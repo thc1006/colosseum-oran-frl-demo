@@ -2,7 +2,7 @@
 from pathlib import Path
 from dataclasses import dataclass, asdict
 
-_ROOT = Path(__file__).resolve().parents[2]  # <repo-root>
+_ROOT = Path.cwd()
 
 
 @dataclass
