@@ -8,13 +8,15 @@ build-backend = "flit_core.buildapi"
 name = "colosseum_oran_frl_demo"
 version = "0.1.1"
 dependencies = [
-    "pandas>=1.5",
-    "numpy>=1.23",
-    "pyarrow>=15.0",
-    "tqdm>=4.66",
-    "torch>=2.1",
-    "matplotlib>=3.8",
-    "dataclasses-json>=0.6"
+    "pandas>=2.3.1",
+    "numpy>=2.3.1",
+    "pyarrow>=20.0.0",
+    "tqdm>=4.67.1",
+    "torch>=2.7.1",
+    "matplotlib>=3.10.3",
+    "dataclasses-json>=0.6.7",
+    "pyyaml>=6.0.2",
+    "networkx>=3.5",
 ]
 description = "Offline Federated RL for O-RAN slice resource management on Colosseum traces"
 authors = [
@@ -35,10 +37,18 @@ frl-train    = "scripts.train:main"
 # 修正：新增此區塊來管理開發相依性
 [project.optional-dependencies]
 dev = [
-    "pytest",
-    "ruff",
-    "black",
-    "nbmake"
+    "pytest>=8.4.1",
+    "ruff>=0.12.3",
+    "black>=25.1.0",
+    "nbmake>=1.5.5",
+    "mypy>=1.16.1",
+    "isort>=6.0.1",
+    "flake8>=7.3.0",
+    "pip-audit>=2.7.0"
+]
+notebook = [
+    "ipykernel>=6.29.5",
+    "notebook>=7.2.1"
 ]
 
 [tool.ruff]

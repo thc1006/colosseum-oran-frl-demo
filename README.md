@@ -85,6 +85,9 @@ In this project, I manually downloaded the [**Original Dataset**](https://github
 
 
 
+##  보안 경고
+현재 `torch` 버전 2.7.1에는 서비스 거부(Denial-of-Service)를 유발할 수 있는 [알려진 취약점(`GHSA-887c-mr87-cxwp`)]이 있습니다. 이 취약점은 로컬 액세스가 필요하며, 현재 연구 데모의 맥락에서는 위험이 낮다고 간주됩니다. 패치된 버전이 출시되는 대로 `torch`를 업데이트하는 것을 권장합니다.
+
 ## 🚀 Quick Start
 
 > Warning!!! This section is workin in progress... Might not stable.
@@ -92,11 +95,10 @@ In this project, I manually downloaded the [**Original Dataset**](https://github
 
 ### 0. Install
 ```bash
-git clone [https://github.com/thc1006/colosseum-oran-frl-demo.git](https://github.com/thc1006/colosseum-oran-frl-demo.git)
+git clone https://github.com/thc1006/colosseum-oran-frl-demo.git
 cd colosseum-oran-frl-demo
 python3 -m venv .venv && source .venv/bin/activate # Win: .venv\Scripts\activate
-pip install -r requirements.txt
-pip install -e .
+pip install -e ".[dev,notebook]"
 ```
 
 ### 1. Data Prep (Requires external dataset)
