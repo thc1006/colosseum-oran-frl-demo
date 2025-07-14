@@ -24,7 +24,6 @@
   <img src="https://img.shields.io/badge/PyTorch-1.10.0%2B-orange"/>
 </p>
 
----
 
 ## ✨ Key Features
 | Category          | What you get                                                                                                | Why it matters                               |
@@ -36,8 +35,6 @@
 | **Modular package** | `src/colosseum_oran_frl_demo` ready for `pip install -e .`                                                  | Swap env/agent without touching notebooks    |
 
 > The README structure re-uses best practices distilled from HuggingFace Transformers, PyTorch, and the “Best-README-Template”.
-
----
 
 ## 🗺️ Project Layout
 
