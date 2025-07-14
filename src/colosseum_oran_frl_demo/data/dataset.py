@@ -2,7 +2,10 @@
 from __future__ import annotations
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
-import itertools, pandas as pd, pyarrow as pa, pyarrow.parquet as pq
+import itertools
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 
 def _parse_common_info(csv_path: Path) -> dict:

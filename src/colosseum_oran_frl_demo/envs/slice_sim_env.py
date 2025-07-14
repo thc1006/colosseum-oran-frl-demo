@@ -5,7 +5,8 @@ The original Notebook class `SliceSimEnv` is copied verbatim
 (and trimmed for standalone use).
 """
 from __future__ import annotations
-import numpy as np, pandas as pd, random
+import numpy as np
+import pandas as pd
 
 
 class SliceSimEnv:
