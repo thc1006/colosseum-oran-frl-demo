@@ -10,9 +10,10 @@ Key points
 """
 
 from __future__ import annotations
+
 import random
 from collections import deque
-from typing import Deque, Tuple, List
+from typing import Deque, List, Tuple
 
 import numpy as np
 import torch
@@ -27,10 +28,10 @@ class RLAgent:
         self,
         state_size: int,
         action_size: int,
-        lr: float = 1e-3,
+        learning_rate: float = 1e-3,
         gamma: float = 0.95,
-        memory_cap: int = 20_000,
-        device: str = "cpu",
+        memory_capacity: int = 20_000,
+        device: str = """cpu""",
     ):
         self.state_size = state_size
         self.action_size = action_size
@@ -50,19 +51,19 @@ class RLAgent:
             nn.Linear(32, action_size),
         ).to(self.device)
 
-        self.optimizer = optim.Adam(self.model.parameters(), lr=lr)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         self.loss_fn = nn.MSELoss()
         self.memory: Deque[Tuple[np.ndarray, int, float, np.ndarray, bool]] = deque(
-            maxlen=memory_cap
+            maxlen=memory_capacity
         )
 
     # ----------------------------------------------------
     # Interaction
     # ----------------------------------------------------
     @torch.no_grad()
-    def act(self, state: np.ndarray, eval: bool = False) -> int:
+    def act(self, state: np.ndarray, is_eval: bool = False) -> int:
         """Return an action (0 … action_size-1)."""
-        if (not eval) and random.random() < self.epsilon:
+        if (not is_eval) and random.random() < self.epsilon:
             return random.randrange(self.action_size)
 
         state_t = torch.as_tensor(state, dtype=torch.float32, device=self.device)
@@ -82,9 +83,18 @@ class RLAgent:
     # ----------------------------------------------------
     # Learning
     # ----------------------------------------------------
-    def replay(self, batch_size: int = 64) -> None:
+    def replay(self, batch_size: int = 64) -> float | None:
+        """
+        Trains the agent by replaying a batch of experiences from memory.
+
+        Args:
+            batch_size: The size of the batch to use for training.
+
+        Returns:
+            The loss value, or None if there is not enough memory.
+        """
         if len(self.memory) < batch_size:
-            return
+            return None
 
         minibatch: List[Tuple] = random.sample(self.memory, batch_size)
         states, actions, rewards, next_states, dones = zip(*minibatch)
@@ -114,3 +124,5 @@ class RLAgent:
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
             self.epsilon = max(self.epsilon, self.epsilon_min)
+
+        return loss.item()

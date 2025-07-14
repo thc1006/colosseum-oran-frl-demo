@@ -8,11 +8,11 @@ from colosseum_oran_frl_demo.envs.slice_sim_env import SliceSimEnv
 def test_env_step():
     df = pd.DataFrame(
         {
-            "timestamp": [0, 0, 1, 1],
-            "BS_ID": [1, 1, 1, 1],
-            "Slice_ID": [0, 2, 0, 2],
-            "Throughput_DL_Mbps": [10, 5, 12, 6],
-            "Latency_proxy_ms": [15, 8, 14, 7],
+            """timestamp""": [0, 0, 1, 1],
+            """BS_ID""": [1, 1, 1, 1],
+            """Slice_ID""": [0, 2, 0, 2],
+            """Throughput_DL_Mbps""": [10, 5, 12, 6],
+            """Latency_proxy_ms""": [15, 8, 14, 7],
         }
     )
     env = SliceSimEnv(df, gnb_id=1)

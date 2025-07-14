@@ -3,8 +3,10 @@
 簡易 FedAvg – 使用 torch.stack 保留 dtype，避免隱式變成 float64。
 """
 from __future__ import annotations
-import torch, copy
-from typing import List, Dict
+
+from typing import Dict, List
+
+import torch
 
 
 @torch.no_grad()

@@ -5,7 +5,9 @@ The original Notebook class `SliceSimEnv` is copied verbatim
 (and trimmed for standalone use).
 """
 from __future__ import annotations
-import numpy as np, pandas as pd, random
+
+import numpy as np
+import pandas as pd
 
 
 class SliceSimEnv:
@@ -18,9 +20,9 @@ class SliceSimEnv:
     """
 
     def __init__(self, df_data: pd.DataFrame, gnb_id: int = 1, slice_ids=(0, 2)):
-        self.df_data = df_data[df_data["BS_ID"] == gnb_id].copy()
+        self.df_data = df_data[df_data["""BS_ID"""] == gnb_id].copy()
         self.slices = slice_ids
-        self.ts_col = "timestamp"
+        self.ts_col = """timestamp"""
         self._prep()
         self.reset()
 
@@ -28,17 +30,16 @@ class SliceSimEnv:
     def _prep(self):
         self.df_data.sort_values(self.ts_col, inplace=True)
         self.ts = self.df_data[self.ts_col].unique()
-        self.cursor = 0
 
     def _state_from_row(self, sub: pd.DataFrame) -> np.ndarray:
         out = []
         for sid in self.slices:
-            row = sub[sub["Slice_ID"] == sid]
+            row = sub[sub["""Slice_ID"""] == sid]
             if row.empty:
                 out.extend([0.0, 0.0])
             else:
-                out.append(row["Throughput_DL_Mbps"].iloc[0])
-                out.append(row["Latency_proxy_ms"].iloc[0])
+                out.append(row["""Throughput_DL_Mbps"""].iloc[0])
+                out.append(row["""Latency_proxy_ms"""].iloc[0])
         return np.asarray(out, dtype=np.float32)
 
     def _compute_reward(self, state: np.ndarray) -> float:
@@ -47,19 +48,29 @@ class SliceSimEnv:
         return 0.3 * tput0 - 0.7 * lat2
 
     # ---------- Gym-like API --------------------------------------------- #
-    def reset(self):
+    def reset(self) -> tuple[np.ndarray, dict]:
+        """Resets the environment to the beginning of the episode."""
         self.cursor = 0
         sub = self.df_data[self.df_data[self.ts_col] == self.ts[self.cursor]]
         return self._state_from_row(sub), {}
 
-    def step(self, action: int):
+    def step(self, action: int) -> tuple[np.ndarray, float, bool, bool, dict]:
+        """
+        Advances the environment by one step.
+
+        Args:
+            action: The action to take.
+
+        Returns:
+            A tuple containing the next state, reward, done flag, and info dict.
+        """
         self.cursor = (self.cursor + 1) % len(self.ts)
         sub = self.df_data[self.df_data[self.ts_col] == self.ts[self.cursor]]
         state = self._state_from_row(sub)
         reward = self._compute_reward(state)
         terminated = False
         truncated = False
-        info = {"timestamp": self.ts[self.cursor]}
+        info = {"""timestamp""": self.ts[self.cursor]}
         return state, reward, terminated, truncated, info
 
     @property
