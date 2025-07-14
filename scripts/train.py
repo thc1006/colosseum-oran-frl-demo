@@ -69,7 +69,7 @@ def main():
             ep_reward = 0.0
 
             # 確保環境有足夠的數據
-            if not env.ts:
+            if not env.ts.any():
                 continue
 
             for step in range(HP.LOCAL_STEPS):
