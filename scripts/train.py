@@ -170,7 +170,7 @@ def main() -> None:
         config_data["parquet"] = str(config_data["parquet"])
         json.dump(config_data, fp, indent=2)
 
-    print(f"✅  Finished {args.rounds} rounds – artifacts saved to {out_dir.resolve()}")
+    print(f"Finished {args.rounds} rounds – artifacts saved to {out_dir.resolve()}")
 
 
 # 修正：增加 if __name__ == "__main__": 區塊

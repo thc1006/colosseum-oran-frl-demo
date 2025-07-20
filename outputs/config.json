@@ -1,0 +1,13 @@
+{
+  "parquet": "./parquet file for test/kpi_traces_final_v_robust.parquet",
+  "rounds": 10,
+  "clients": "1,2,3",
+  "num_selected_clients": null,
+  "out": "C:\\Users\\thc1006\\Desktop\\colosseum-oran-frl-demo\\colosseum-oran-frl-demo\\outputs",
+  "HP": {
+    "LR": 0.001,
+    "GAMMA": 0.95,
+    "EPS_DECAY": 0.998,
+    "LOCAL_STEPS": 2000
+  }
+}

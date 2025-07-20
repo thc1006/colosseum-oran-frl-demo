@@ -62,8 +62,8 @@ class SliceSimEnv:
             if row.empty:
                 out.extend([0.0, 0.0])
             else:
-                out.append(row["Throughput_DL_Mbps"].iloc[0])
-                out.append(row["Latency_proxy_ms"].iloc[0])
+                out.append(row["tx_brate downlink [Mbps]"].iloc[0])
+                out.append(row["dl_buffer [bytes]"].iloc[0])
         return np.asarray(out, dtype=np.float32)
 
     def _compute_reward(self, state: np.ndarray) -> float:
