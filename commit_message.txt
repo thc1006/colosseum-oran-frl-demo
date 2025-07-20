@@ -1,0 +1,6 @@
+Refactor: Stabilize FRL pipeline and update documentation
+
+- Corrected data column mismatches in the simulation environment (slice_sim_env.py) to align with the available Parquet file columns, resolving KeyErrors.
+- Fixed a UnicodeEncodeError in the training script to ensure cross-platform compatibility.
+- Ensured the federated learning pipeline now runs end-to-end without errors.
+- Overhauled README.md to accurately reflect the project's architecture, fix broken instructions, and provide a clear getting-started guide.
