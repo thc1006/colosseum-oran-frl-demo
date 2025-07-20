@@ -31,7 +31,18 @@ class RLAgent:
         gamma: float = 0.95,
         memory_cap: int = 20_000,
         device: str = "cpu",
-    ):
+    ) -> None:
+        """
+        Initializes the RLAgent.
+
+        Args:
+            state_size: The size of the observation space.
+            action_size: The size of the action space.
+            lr: Learning rate for the optimizer.
+            gamma: Discount factor for future rewards.
+            memory_cap: Maximum capacity of the experience replay memory.
+            device: The device to run the model on (e.g., "cpu" or "cuda").
+        """
         self.state_size = state_size
         self.action_size = action_size
         self.gamma = gamma
@@ -61,7 +72,16 @@ class RLAgent:
     # ----------------------------------------------------
     @torch.no_grad()
     def act(self, state: np.ndarray, eval: bool = False) -> int:
-        """Return an action (0 … action_size-1)."""
+        """
+        Returns an action based on the current state.
+
+        Args:
+            state: The current state as a NumPy array.
+            eval: If True, the agent acts greedily (no exploration).
+
+        Returns:
+            The chosen action (an integer from 0 to action_size-1).
+        """
         if (not eval) and random.random() < self.epsilon:
             return random.randrange(self.action_size)
 
@@ -77,12 +97,28 @@ class RLAgent:
         next_state: np.ndarray,
         done: bool,
     ) -> None:
+        """
+        Stores an experience tuple in the agent's memory.
+
+        Args:
+            state: The current state.
+            action: The action taken.
+            reward: The reward received.
+            next_state: The state after the action.
+            done: Whether the episode terminated.
+        """
         self.memory.append((state, action, reward, next_state, done))
 
     # ----------------------------------------------------
     # Learning
     # ----------------------------------------------------
     def replay(self, batch_size: int = 64) -> None:
+        """
+        Trains the agent using a batch of experiences from the replay memory.
+
+        Args:
+            batch_size: The number of experiences to sample from memory.
+        """
         if len(self.memory) < batch_size:
             return
 

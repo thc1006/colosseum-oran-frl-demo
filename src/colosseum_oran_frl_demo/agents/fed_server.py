@@ -12,15 +12,22 @@ def fedavg(
     client_model_states: List[Dict[str, torch.Tensor]],
 ) -> Dict[str, torch.Tensor]:
     """
-    接收一個模型狀態字典的列表，回傳一個平均後的狀態字典。
+    Aggregates client model states using the Federated Averaging (FedAvg) algorithm.
+
+    Args:
+        client_model_states: A list of dictionaries, where each dictionary represents
+                             the state_dict of a client's model.
+
+    Returns:
+        A dictionary representing the averaged global model state.
     """
     if not client_model_states:
         return {}
 
-    # 取得第一個客戶端的模型鍵
+    # Get the keys from the first client's model state
     keys = client_model_states[0].keys()
 
-    # 計算每個參數的平均值
+    # Calculate the average for each parameter
     avg_state = {
         k: torch.mean(torch.stack([s[k].float() for s in client_model_states]), dim=0)
         for k in keys

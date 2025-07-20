@@ -35,9 +35,16 @@ def main():
 
     try:
         df = pd.read_parquet(args.parquet)
+        if df.empty:
+            print(f"Error: Parquet file at {args.parquet} is empty.")
+            print("Please ensure the data preparation script generates valid data.")
+            return
     except FileNotFoundError:
         print(f"Error: Parquet file not found at {args.parquet}")
         print("Please run the data preparation script first.")
+        return
+    except Exception as e:
+        print(f"An error occurred while reading the parquet file: {e}")
         return
 
     cid_list = list(map(int, args.clients.split(",")))
