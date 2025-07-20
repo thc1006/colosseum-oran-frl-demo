@@ -1,8 +1,15 @@
 import matplotlib.pyplot as plt
+from typing import List
 
 
-def plot_training_results(all_round_avg_rewards, all_round_avg_losses):
-    """Plot average rewards and losses per communication round."""
+def plot_training_results(all_round_avg_rewards: List[float], all_round_avg_losses: List[float]) -> None:
+    """
+    Plots average rewards and losses per communication round.
+
+    Args:
+        all_round_avg_rewards: A list of average rewards for each communication round.
+        all_round_avg_losses: A list of average losses for each communication round.
+    """
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
 
     ax1.plot(

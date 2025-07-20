@@ -8,6 +8,8 @@ import pandas as pd
 import torch
 from pathlib import Path
 from tqdm import trange
+import random
+from typing import List, Dict, Any, Tuple
 
 from colosseum_oran_frl_demo.config import HP, Paths
 from colosseum_oran_frl_demo.envs.slice_sim_env import SliceSimEnv
@@ -17,7 +19,13 @@ from colosseum_oran_frl_demo.utils.plots import plot_training_results
 
 
 # 修正：將所有邏輯封裝到 main() 函式中
-def main():
+def main() -> None:
+    """
+    Main function for offline FRL training.
+
+    This function handles argument parsing, data loading, environment and agent
+    initialization, the federated training loop, and saving results.
+    """
     # ---------- CLI ---------------------------------------------------------- #
     ap = argparse.ArgumentParser(description="Offline FRL training entrypoint")
     ap.add_argument(
@@ -27,12 +35,14 @@ def main():
     )
     ap.add_argument("--rounds", type=int, default=10)
     ap.add_argument("--clients", default="1,2,3")
+    ap.add_argument("--num_selected_clients", type=int, default=None, help="Number of clients to select for each round. If None, all clients are used.")
     ap.add_argument("--out", default=str(Paths.OUTPUTS))
-    args = ap.parse_args()
+    args: argparse.Namespace = ap.parse_args()
 
-    out_dir = Path(args.out)
+    out_dir: Path = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    df: pd.DataFrame
     try:
         df = pd.read_parquet(args.parquet)
         if df.empty:
@@ -47,82 +57,110 @@ def main():
         print(f"An error occurred while reading the parquet file: {e}")
         return
 
-    cid_list = list(map(int, args.clients.split(",")))
+    cid_list: List[int] = list(map(int, args.clients.split(",")))
 
-    DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+    DEVICE: str = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Using device: {DEVICE}")
 
-    envs = [SliceSimEnv(df, gnb_id=i) for i in cid_list]
-    agents = [
-        RLAgent(env.state_size, env.action_size, lr=HP.LR, device=DEVICE)
-        for env in envs
-    ]
+    envs: List[SliceSimEnv] = []
+    agents: List[RLAgent] = []
 
-    history = []
+    for i in cid_list:
+        try:
+            env: SliceSimEnv = SliceSimEnv(df, gnb_id=i)
+            envs.append(env)
+            agents.append(RLAgent(env.state_size, env.action_size, lr=HP.LR, device=DEVICE))
+        except ValueError as e:
+            print(f"Skipping client {i} due to error: {e}")
+            continue
+
+    if not envs:
+        print("No environments were successfully initialized. Exiting.")
+        return
+
+    history: List[Dict[str, float]] = []
     for rd in trange(args.rounds, desc="Fed Round"):
-        client_model_states = [ag.model.state_dict() for ag in agents]
+        # Client selection
+        selected_agents: List[RLAgent]
+        selected_envs: List[SliceSimEnv]
+        if args.num_selected_clients and args.num_selected_clients < len(agents):
+            selected_clients_indices: List[int] = random.sample(range(len(agents)), args.num_selected_clients)
+            selected_agents = [agents[i] for i in selected_clients_indices]
+            selected_envs = [envs[i] for i in selected_clients_indices]
+        else:
+            selected_agents = agents
+            selected_envs = envs
 
-        # 這裡假設您已修正 fedavg
-        global_model_state = fedavg(client_model_states)
+        client_model_states: List[Dict[str, torch.Tensor]] = [
+            ag.model.state_dict() for ag in selected_agents
+        ]
 
-        for ag in agents:
+        global_model_state: Dict[str, torch.Tensor] = fedavg(client_model_states)
+
+        for ag in selected_agents:
             ag.model.load_state_dict(global_model_state)
 
-        round_rewards = []
-        round_losses = []
+        round_rewards: List[float] = []
+        round_losses: List[float] = []
 
-        for ag, env in zip(agents, envs):
+        for ag, env in zip(selected_agents, selected_envs):
+            state: np.ndarray
+            ep_reward: float
             state, _ = env.reset()
             ep_reward = 0.0
 
-            # 確保環境有足夠的數據
-            if not env.ts.any():
-                continue
-
             for step in range(HP.LOCAL_STEPS):
-                act = ag.act(state)
+                act: int = ag.act(state)
+                nst: np.ndarray
+                rwd: float
+                term: bool
+                trunc: bool
                 nst, rwd, term, trunc, _ = env.step(act)
                 ag.remember(state, act, rwd, nst, term or trunc)
 
-                loss = ag.replay(64)
+                loss: Any = ag.replay(64)
                 if loss is not None:
                     round_losses.append(loss)
 
                 ep_reward += rwd
                 state = nst
                 if term or trunc:
-                    break  # 如果環境結束，提前終止
+                    break
 
             if HP.LOCAL_STEPS > 0:
-                round_rewards.append(ep_reward / (step + 1))  # 使用實際步數計算平均獎勵
+                # Use actual steps taken for average reward calculation
+                round_rewards.append(ep_reward / (step + 1) if (step + 1) > 0 else 0.0)
 
-        avg_reward = float(np.mean(round_rewards)) if round_rewards else 0.0
-        avg_loss = float(np.mean(round_losses)) if round_losses else 0.0
+        avg_reward: float = float(np.mean(round_rewards)) if round_rewards else 0.0
+        avg_loss: float = float(np.mean(round_losses)) if round_losses else 0.0
 
         history.append(
             {
-                "round": rd,
+                "round": float(rd),
                 "reward": avg_reward,
                 "loss": avg_loss,
-                "epsilon": float(np.mean([ag.epsilon for ag in agents])),
+                "epsilon": float(np.mean([ag.epsilon for ag in selected_agents]) if selected_agents else 0.0),
             }
         )
         print(
             f"Round {rd+1}/{args.rounds} - Avg Reward: {avg_reward:.4f}, Avg Loss: {avg_loss:.4f}"
         )
 
-    # 儲存歷史紀錄和模型
-    history_df = pd.DataFrame(history)
+    # Save history and model
+    history_df: pd.DataFrame = pd.DataFrame(history)
     history_df.to_csv(out_dir / "training_history.csv", index=False)
-    torch.save(agents[0].model.state_dict(), out_dir / "global_model.pt")
+    if agents:
+        torch.save(agents[0].model.state_dict(), out_dir / "global_model.pt")
+    else:
+        print("No agents were initialized, skipping model save.")
 
-    # 繪製結果
+    # Plot results
     if not history_df.empty:
         plot_training_results(history_df["reward"], history_df["loss"])
 
     with open(out_dir / "config.json", "w") as fp:
-        config_data = vars(args)
-        # 將 Path 物件轉為字串以便 JSON 序列化
+        config_data: Dict[str, Any] = vars(args)
+        # Convert Path objects to strings for JSON serialization
         config_data["HP"] = {
             k: str(v) if isinstance(v, Path) else v
             for k, v in HP.__dict__.items()

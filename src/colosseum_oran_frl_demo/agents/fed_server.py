@@ -24,7 +24,9 @@ def fedavg(
     if not client_model_states:
         return {}
 
-    # Get the keys from the first client's model state
+    # Assumption: All client models have identical architectures and parameter names.
+    # If different architectures are to be supported, this function would require
+    # significant modifications (e.g., handling parameter mismatches, interpolation).
     keys = client_model_states[0].keys()
 
     # Calculate the average for each parameter

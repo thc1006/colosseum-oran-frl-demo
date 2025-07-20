@@ -1,29 +1,23 @@
-import unittest
+from pathlib import Path
 from colosseum_oran_frl_demo.config import Paths, HP, hp_dict
 
 
-class TestConfig(unittest.TestCase):
-    def test_paths(self):
-        print(f"Root path: {Paths.ROOT}, exists: {Paths.ROOT.exists()}")
-        print(f"Raw data path: {Paths.RAW_DATA}, exists: {Paths.RAW_DATA.exists()}")
-        print(f"Processed path: {Paths.PROCESSED}, exists: {Paths.PROCESSED.exists()}")
-        print(f"Outputs path: {Paths.OUTPUTS}, exists: {Paths.OUTPUTS.exists()}")
-        self.assertTrue(Paths.ROOT.is_dir())
-        self.assertTrue(Paths.RAW_DATA.is_dir())
-        self.assertTrue(Paths.PROCESSED.is_dir())
-        self.assertTrue(Paths.OUTPUTS.is_dir())
+def test_paths_exist():
+    assert Paths.ROOT.is_dir()
+    assert Paths.RAW_DATA.is_dir()
+    assert Paths.PROCESSED.is_dir()
+    assert Paths.OUTPUTS.is_dir()
 
-    def test_hyperparameters(self):
-        self.assertIsInstance(HP.LR, float)
-        self.assertIsInstance(HP.GAMMA, float)
-        self.assertIsInstance(HP.EPS_DECAY, float)
-        self.assertIsInstance(HP.LOCAL_STEPS, int)
+def test_hyperparameters_types():
+    assert isinstance(HP.LR, float)
+    assert isinstance(HP.GAMMA, float)
+    assert isinstance(HP.EPS_DECAY, float)
+    assert isinstance(HP.LOCAL_STEPS, int)
 
-    def test_hp_dict(self):
-        d = hp_dict()
-        self.assertIsInstance(d, dict)
-        self.assertEqual(d["LR"], HP.LR)
-
-
-if __name__ == "__main__":
-    unittest.main()
+def test_hp_dict_content():
+    d = hp_dict()
+    assert isinstance(d, dict)
+    assert d["LR"] == HP.LR
+    assert d["GAMMA"] == HP.GAMMA
+    assert d["EPS_DECAY"] == HP.EPS_DECAY
+    assert d["LOCAL_STEPS"] == HP.LOCAL_STEPS

@@ -117,9 +117,21 @@ class SliceSimEnv:
         return state, reward, terminated, truncated, info
 
     @property
-    def action_size(self):
+    def action_size(self) -> int:
+        """
+        Returns the size of the action space.
+
+        Returns:
+            The number of possible actions.
+        """
         return 3
 
     @property
-    def state_size(self):
+    def state_size(self) -> int:
+        """
+        Returns the size of the state space.
+
+        Returns:
+            The number of state features.
+        """
         return 4

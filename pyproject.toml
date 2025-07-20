@@ -52,3 +52,7 @@ extend-select = ["I"]  # Add import sorting
 [tool.ruff.lint.isort]
 known-first-party = ["colosseum_oran_frl_demo"]
 force-sort-within-sections = true
+
+[tool.black]
+line-length = 99
+target-version = ["py39"]
