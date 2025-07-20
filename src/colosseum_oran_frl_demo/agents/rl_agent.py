@@ -150,3 +150,22 @@ class RLAgent:
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
             self.epsilon = max(self.epsilon, self.epsilon_min)
+        
+        return loss.item()
+
+    def save(self, path: str | Path) -> None:
+        """Saves the model state to a file."""
+        torch.save({
+            'model_state_dict': self.model.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'epsilon': self.epsilon,
+            'memory': self.memory,
+        }, path)
+
+    def load(self, path: str | Path) -> None:
+        """Loads the model state from a file."""
+        checkpoint = torch.load(path, map_location=self.device)
+        self.model.load_state_dict(checkpoint['model_state_dict'])
+        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        self.epsilon = checkpoint['epsilon']
+        self.memory = checkpoint['memory']
