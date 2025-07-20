@@ -110,3 +110,34 @@ def test_config_loading_and_validation(tmp_path):
     assert HP.EPS_DECAY > 0 and HP.EPS_DECAY <= 1
     assert HP.LOCAL_STEPS > 0
     assert Paths.ROOT.exists()
+
+def test_model_serialization_deserialization_in_integration(global_model, client_envs, tmp_path):
+    """
+    Test saving and loading the global model within an integration context.
+    """
+    # 1. Perform one round of federated learning to get an updated global model
+    initial_global_weights = {k: v.clone() for k, v in global_model.model.state_dict().items()}
+    client_models_states = []
+    for env in client_envs:
+        client_agent = RLAgent(env.state_size, env.action_size, device="cpu")
+        client_agent.model.load_state_dict(initial_global_weights)
+        state, _ = env.reset()
+        client_agent.remember(state, 0, 1.0, state, False)
+        client_agent.replay(batch_size=1)
+        client_models_states.append(client_agent.model.state_dict())
+    new_global_weights = fedavg(client_models_states)
+    global_model.model.load_state_dict(new_global_weights)
+
+    # 2. Save the updated global model
+    model_path = tmp_path / "integrated_global_model.pth"
+    global_model.save(model_path)
+    assert model_path.exists()
+
+    # 3. Load the model into a new RLAgent instance
+    loaded_model = RLAgent(global_model.state_size, global_model.action_size, device="cpu")
+    loaded_model.load(model_path)
+
+    # 4. Verify that the loaded model's state is identical to the saved model's state
+    for key in new_global_weights:
+        assert torch.equal(loaded_model.model.state_dict()[key], new_global_weights[key]), \
+            f"Mismatch in loaded model parameter: {key}"

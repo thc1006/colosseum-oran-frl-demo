@@ -84,6 +84,22 @@ def test_env_compute_reward_zero_values(env):
     reward = env._compute_reward(state)
     assert reward == 0.0
 
+@pytest.mark.parametrize(
+    "tput0, lat0, tput2, lat2, expected_reward",
+    [
+        (10.0, 15.0, 5.0, 8.0, (0.3 * 10.0) - (0.7 * 8.0)),  # Original test case
+        (0.0, 0.0, 0.0, 0.0, 0.0),  # All zeros
+        (100.0, 1.0, 100.0, 1.0, (0.3 * 100.0) - (0.7 * 1.0)),  # High throughput, low latency
+        (1.0, 100.0, 1.0, 100.0, (0.3 * 1.0) - (0.7 * 100.0)),  # Low throughput, high latency
+        (50.0, 5.0, 0.0, 0.0, (0.3 * 50.0) - (0.7 * 0.0)),  # One slice active, other inactive
+        (0.0, 0.0, 50.0, 5.0, (0.3 * 0.0) - (0.7 * 5.0)),  # Other slice active, one inactive
+    ],
+)
+def test_env_compute_reward_parametrized(env, tput0, lat0, tput2, lat2, expected_reward):
+    state = np.array([tput0, lat0, tput2, lat2], dtype=np.float32)
+    reward = env._compute_reward(state)
+    assert reward == pytest.approx(expected_reward)
+
 # --- Gym-like API Tests ---
 def test_env_reset(env, sample_dataframe):
     state, info = env.reset()

@@ -83,5 +83,5 @@ def test_fedavg_mismatched_shapes():
     model_state2 = {"layer1.weight": torch.tensor([[5.0, 6.0, 7.0]])} # Different shape
     client_model_states = [model_state1, model_state2]
     
-    with pytest.raises(RuntimeError, match="The size of tensor a .* must match the size of tensor b"):
+    with pytest.raises(RuntimeError, match="stack expects each tensor to be equal size"):
         fedavg(client_model_states)

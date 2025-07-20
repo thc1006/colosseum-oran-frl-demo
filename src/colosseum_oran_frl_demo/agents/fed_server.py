@@ -29,6 +29,16 @@ def fedavg(
     # significant modifications (e.g., handling parameter mismatches, interpolation).
     keys = client_model_states[0].keys()
 
+    # Validate that all client models have the same keys and check for NaN/Inf
+    for i, client_state in enumerate(client_model_states):
+        if client_state.keys() != keys:
+            raise ValueError("Client models have different architectures.")
+        for k, v in client_state.items():
+            if torch.isnan(v).any():
+                raise ValueError(f"Detected NaN in model weights from client {i}.")
+            if torch.isinf(v).any():
+                raise ValueError(f"Detected Inf in model weights from client {i}.")
+
     # Calculate the average for each parameter
     avg_state = {
         k: torch.mean(torch.stack([s[k].float() for s in client_model_states]), dim=0)

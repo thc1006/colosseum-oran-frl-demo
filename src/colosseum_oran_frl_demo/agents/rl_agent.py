@@ -125,8 +125,8 @@ class RLAgent:
         minibatch: List[Tuple] = random.sample(self.memory, batch_size)
         states, actions, rewards, next_states, dones = zip(*minibatch)
 
-        states_t = torch.as_tensor(states, dtype=torch.float32, device=self.device)
-        next_t = torch.as_tensor(next_states, dtype=torch.float32, device=self.device)
+        states_t = torch.as_tensor(np.array(states), dtype=torch.float32, device=self.device)
+        next_t = torch.as_tensor(np.array(next_states), dtype=torch.float32, device=self.device)
         rewards_t = torch.as_tensor(rewards, dtype=torch.float32, device=self.device)
         dones_t = torch.as_tensor(dones, dtype=torch.float32, device=self.device)
         actions_t = torch.as_tensor(
@@ -134,7 +134,7 @@ class RLAgent:
         ).view(-1, 1)
 
         # Predicted Q(s,a)
-        q_pred = self.model(states_t).gather(1, actions_t).squeeze()
+        q_pred = self.model(states_t).gather(1, actions_t).view(-1)
 
         # Target: r + γ * max_a' Q(s',a') * (1-done)
         with torch.no_grad():
@@ -164,7 +164,7 @@ class RLAgent:
 
     def load(self, path: str | Path) -> None:
         """Loads the model state from a file."""
-        checkpoint = torch.load(path, map_location=self.device)
+        checkpoint = torch.load(path, map_location=self.device, weights_only=False)
         self.model.load_state_dict(checkpoint['model_state_dict'])
         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         self.epsilon = checkpoint['epsilon']

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frl-server
+  labels:
+    app: frl-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frl-server
+  template:
+    metadata:
+      labels:
+        app: frl-server
+    spec:
+      containers:
+      - name: server
+        image: colosseum-oran-frl-demo:latest # This image needs to be pushed to a registry
+        ports:
+        - containerPort: 5000 # Assuming the federated server runs on port 5000
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+            # If GPU is needed for the server, uncomment and configure:
+            # nvidia.com/gpu: 1
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+        # Add environment variables if needed for server configuration
+        # env:
+        #   - name: SERVER_PORT
+        #     value: "5000"

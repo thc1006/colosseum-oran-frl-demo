@@ -20,7 +20,8 @@ OUTPUTS_DIR   := outputs
 
 # ─── phony targets ────────────────────────────────────────────────────────
 .PHONY: env install lint format test \
-        data train clean docs
+        data train clean docs \
+        docker-build-dev docker-run-dev docker-build-prod
 
 # 1. 建立虛擬環境並安裝
 env:
@@ -32,16 +33,24 @@ env:
 
 install: env  ## alias
 
-# 2. Lint（ruff）+ format（black）
+# 2. Lint（ruff）+ format（black）+ Type Check (mypy) + Security Scan (bandit)
 lint:
-	$(PYTHON) -m ruff src scripts tests
+	@echo "Running Ruff checks..."
+	$(PYTHON) -m ruff check src scripts tests
+	@echo "Running Black formatting checks..."
+	$(PYTHON) -m black --check src scripts tests
+	@echo "Running Mypy type checks..."
+	$(PYTHON) -m mypy src scripts
+	@echo "Running Bandit security scan..."
+	$(PYTHON) -m bandit -r src scripts
 
 format:
 	$(PYTHON) -m black src scripts tests
 
-# 3. 執行單元測試
+# 3. 執行單元測試 (含覆蓋率)
 test:
-	$(PYTHON) -m pytest -q
+	@echo "Running unit tests with Pytest and Coverage..."
+	$(PYTHON) -m pytest --cov=src --cov-report=xml tests/
 
 # 4. 轉換原始 CSV → Parquet
 data:
@@ -64,6 +73,19 @@ clean:
 	@rm -rf $(OUTPUTS_DIR)/*
 	@find . -name "__pycache__" -type d -exec rm -rf {} +
 	@find . -name "*.pyc" -delete
+
+# 8. Docker Targets
+docker-build-dev:
+	@echo "Building Docker development image..."
+	docker build -t colosseum-oran-frl-demo-dev:latest --target development .
+
+docker-run-dev:
+	@echo "Running Docker development container..."
+	docker run -it --rm -v "$(shell pwd)":/app colosseum-oran-frl-demo-dev:latest bash
+
+docker-build-prod:
+	@echo "Building Docker production image..."
+	docker build -t colosseum-oran-frl-demo:latest --target production .
 
 # 預設
 default: test

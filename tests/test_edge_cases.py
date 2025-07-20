@@ -74,11 +74,11 @@ def test_model_divergence_detection():
     model_state2_inf = {"layer.weight": diverged_weights_inf}
 
     # Test with NaN
-    with pytest.raises(ValueError, match="Detected NaN in model weights from a client."):
+    with pytest.raises(ValueError, match="Detected NaN in model weights from client"):
         fedavg([model_state1, model_state2_nan])
 
     # Test with Infinity
-    with pytest.raises(ValueError, match="Detected Inf in model weights from a client."):
+    with pytest.raises(ValueError, match="Detected Inf in model weights from client"):
         fedavg([model_state1, model_state2_inf])
 
 def test_resource_exhaustion_memory():

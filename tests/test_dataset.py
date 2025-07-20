@@ -130,13 +130,13 @@ def test_make_parquet_no_csv_found(tmp_path: Path) -> None:
     raw_dir.mkdir()
     out_dir = tmp_path / "processed"
     
-    with pytest.raises(FileNotFoundError, match=f"No CSV found under {raw_dir}"):
+    with pytest.raises(FileNotFoundError, match=r"No CSV found under .*"):
         make_parquet(raw_dir, out_dir)
 
-def test_make_parquet_output_directory_creation(tmp_path):
+def test_make_parquet_output_directory_creation(tmp_path, create_dummy_csv):
     raw_dir = tmp_path / "input_data"
     raw_dir.mkdir()
-    create_dummy_csv(tmp_path, sub_dirs=["input_data"], filename="test.csv")
+    create_dummy_csv(filename="test.csv", sub_dirs=["input_data"])
     out_dir = tmp_path / "new_processed_data" / "sub_dir"
     
     # out_dir does not exist initially
